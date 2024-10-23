@@ -1,0 +1,275 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package DatosBD;
+
+import DatosBD.ConexionBD;
+import Model.Usuario;
+import Model.Util;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
+
+/**
+ *
+ * @author MSI
+ */
+public class UsuarioBD {
+    
+    Connection conexion = null;
+    
+    public UsuarioBD() {
+        
+        ConexionPG conexionPG = new ConexionPG();
+        conexion = conexionPG.getConexion();
+    }
+    
+    private static final String SELECT_BY_ID = "SELECT * FROM empleados.usuarios WHERE codigo=?;";
+    private static final String CREAR_USUARIO = "SELECT empleados.crear_empleados(?,?,?,?,?,?,?,?)";
+    
+    public Usuario getUsuarioCodigo(int codigo) {
+        // validateCarnet not null
+        try {
+            PreparedStatement select = conexion.prepareStatement(SELECT_BY_ID);
+            select.setInt(1, codigo);
+            ResultSet resultset = select.executeQuery();
+            System.out.println("----------------------------------------------------");
+            System.out.println(select.toString());
+            
+            if (resultset.next()) {
+                return new Usuario(resultset.getInt("codigo"),
+                        resultset.getString("nombre"), resultset.getString("usuario"),
+                        resultset.getString("correo"), null, resultset.getString("tipo"),
+                        resultset.getInt("codigo_sucursal"), resultset.getInt("codigo_caja"), resultset.getInt("codigo_bodega")
+                );
+            }
+            
+            return null;
+        } catch (SQLException ex) {
+            // TODO pendiente manejo
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    public Usuario crearUsuario(Usuario usuario) throws SQLException {
+        
+        PreparedStatement insert = conexion.prepareStatement(CREAR_USUARIO);
+        insert.setString(1, usuario.getTipo());
+        insert.setString(2, usuario.getNombre());
+        insert.setString(3, usuario.getUsuario());
+        insert.setString(4, Util.Encriptar(usuario.getPassword()));
+        insert.setString(5, usuario.getCorreo());
+        insert.setInt(6, usuario.getCodigoBodega());
+        insert.setInt(7, usuario.getCodigoSucursal());
+        insert.setInt(8, usuario.getCodigoCaja());
+        
+        System.out.println("------------Creando VENTA------------");
+        System.out.println(insert.toString());
+        ResultSet resultset = insert.executeQuery();
+        if (resultset.next()) {
+            
+            usuario.setCodigo(resultset.getInt(1));
+            
+            return usuario;
+        }
+        
+        return null;
+    }
+
+//    private Connection conexion;
+//
+//    public UsuarioBD(Connection conexion) {
+//        this.conexion = conexion;
+//    }
+//
+//    public UsuarioBD() {
+//        conexion = ConexionBD.getInstancia().getConexion();
+//
+//    }
+//
+//    private static final String SelectUsuario = "SELECT * FROM usuarios WHERE usuario = ?";
+//    private static final String SelectUsuarioID = "SELECT * FROM usuarios WHERE codigo = ?";
+//    private static final String SelectUsuarioCorreo = "SELECT * FROM usuarios WHERE correo = ?";
+//    private static final String Insert = "INSERT INTO usuarios (codigo, nombre, usuario, password, direccion, correo, cui, birth, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//    private static final String cambiarPassword = "UPDATE usuarios SET password = ? WHERE codigo = ?";
+//    private static final String actualizarUsuario = "UPDATE usuarios SET nombre = ?, direccion = ?, correo = ?, cui = ?, birth = ? WHERE codigo = ?";
+//    private static final String ExisteCorreYUsuario = "SELECT * FROM usuarios WHERE usuario = ? OR correo = ? ";
+//
+//    private static final String Dashboard = "SELECT COUNT(CASE WHEN tipo = 'Empleador' THEN 1 END) AS total_empleadores, COUNT(CASE WHEN tipo = 'Usuario' THEN 1 END) AS total_usuarios FROM usuarios;";
+//    Util util = new Util();
+//
+//    public Usuario crearUsuario(Usuario usuario) {
+//        System.out.println("esta creando el usuario");
+//        try {
+//            PreparedStatement insert = conexion.prepareStatement(Insert, PreparedStatement.RETURN_GENERATED_KEYS);
+//            insert.setInt(1, usuario.getCodigo());
+//            insert.setString(2, usuario.getNombre());
+//            insert.setString(3, usuario.getUsuario());
+//            insert.setString(4, util.Encriptar(usuario.getPassword()));
+//            insert.setString(5, usuario.getDireccion());
+//            insert.setString(6, usuario.getCorreo());
+//            insert.setString(7, usuario.getCui());
+//            insert.setString(8, usuario.getBirth());
+//            insert.setString(9, usuario.getTipo());
+//
+//            System.out.println(insert.toString());
+//            int affectedRows = insert.executeUpdate();
+//
+//            if (affectedRows == 0) {
+//                throw new SQLException("La inserción no tuvo éxito, ningún ID generado.");
+//            }
+//
+//            try (ResultSet generatedKeys = insert.getGeneratedKeys()) {
+//                if (generatedKeys.next()) {
+//                    int generatedID = generatedKeys.getInt(1);
+//                    System.out.println("categoria Creada");
+//                    usuario.setCodigo(generatedID);
+//                    return usuario;
+//                } else {
+//                    throw new SQLException("La inserción no tuvo éxito, ningún ID generado.");
+//                }
+//            }
+//        } catch (SQLException ex) {
+//            System.out.println("----------------------------------");
+//            ex.printStackTrace();
+//        }
+//
+//        return null;
+//    }
+//
+//
+//    
+//
+//    public  Usuario getUsuarioByUser(String usuario) {
+//        // validateCarnet not null
+//        try {
+//            PreparedStatement select = conexion.prepareStatement(SelectUsuario);
+//            select.setString(1, usuario);
+//            ResultSet resultset = select.executeQuery();
+//
+//            if (resultset.next()) {
+//                return new Usuario(resultset.getInt("codigo"),
+//                        resultset.getString("nombre"), resultset.getString("usuario"),
+//                        resultset.getString("direccion"), resultset.getString("correo"), "",
+//                        resultset.getString("cui"), resultset.getString("birth"), resultset.getString("tipo"),
+//                        resultset.getBytes("cv"));
+//            }
+//
+//            return null;
+//        } catch (SQLException ex) {
+//            // TODO pendiente manejo
+//            ex.printStackTrace();
+//        }
+//
+//        return null;
+//    }
+//
+//    public  Usuario getUsuarioCodigo(String codigo) {
+//        // validateCarnet not null
+//        try {
+//            PreparedStatement select = conexion.prepareStatement(SelectUsuarioID);
+//            select.setString(1, codigo);
+//            ResultSet resultset = select.executeQuery();
+//            System.out.println("----------------------------------------------------");
+//            System.out.println(select.toString());
+//
+//            if (resultset.next()) {
+//                return new Usuario(resultset.getInt("codigo"),
+//                        resultset.getString("nombre"), resultset.getString("usuario"),
+//                        resultset.getString("direccion"), resultset.getString("correo"), "",
+//                        resultset.getString("cui"), resultset.getString("birth"), resultset.getString("tipo"),
+//                        resultset.getBytes("cv"));
+//            }
+//
+//            return null;
+//        } catch (SQLException ex) {
+//            // TODO pendiente manejo
+//            ex.printStackTrace();
+//        }
+//
+//        return null;
+//    }
+//
+//    public Usuario getUsuarioCorreo(String correo) {
+//        // validateCarnet not null
+//        try {
+//            PreparedStatement select = conexion.prepareStatement(SelectUsuarioCorreo);
+//            select.setString(1, correo);
+//            ResultSet resultset = select.executeQuery();
+//            System.out.println("----------------------------------------------------");
+//            System.out.println(select.toString());
+//
+//            if (resultset.next()) {
+//                return new Usuario(resultset.getInt("codigo"),
+//                        resultset.getString("nombre"), resultset.getString("usuario"),
+//                        resultset.getString("direccion"), resultset.getString("correo"), "",
+//                        resultset.getString("cui"), resultset.getString("birth"), resultset.getString("tipo"),
+//                        resultset.getBytes("cv"));
+//            }
+//
+//            return null;
+//        } catch (SQLException ex) {
+//            // TODO pendiente manejo
+//            ex.printStackTrace();
+//        }
+//
+//        return null;
+//    }
+//
+//    public boolean cambiarPassword(String codigoUsuario, String password) {
+//
+//        System.out.println("Actualizando la password");
+//        try {
+//            PreparedStatement update = conexion.prepareStatement(cambiarPassword);
+//            update.setString(1, util.Encriptar(password));
+//            update.setString(2, codigoUsuario);
+//            System.out.println("QueryFinalizacion : " + update.toString());
+//            int affectedRows = update.executeUpdate();
+//
+//            if (affectedRows == 1) {
+//                return true;
+//            } else {
+//                System.out.println("La actualización no tuvo éxito.");
+//                return false;
+//            }
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//            System.out.println(ex);
+//        }
+//
+//        return false;
+//    }
+//
+//    public boolean ActualizarUsuario(Usuario usuario) {
+//
+//        System.out.println("Actualizando la password");
+//        try {
+//            PreparedStatement update = conexion.prepareStatement(actualizarUsuario);
+//            update.setString(1, usuario.getNombre());
+//            update.setString(2, usuario.getDireccion());
+//            update.setString(3, usuario.getCorreo());
+//            update.setString(4, usuario.getCui());
+//            update.setString(5, usuario.getBirth());
+//            update.setInt(6, usuario.getCodigo());
+//            System.out.println("QueryActualizacion: " + update.toString());
+//            int affectedRows = update.executeUpdate();
+//
+//            if (affectedRows == 1) {
+//                return true;
+//            } else {
+//                System.out.println("La actualización no tuvo éxito.");
+//                return false;
+//            }
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//            System.out.println(ex);
+//        }
+//
+//        return false;
+//    }
+}
