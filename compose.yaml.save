@@ -1,0 +1,28 @@
+services:
+  angular_app:
+    build: ./Proyecto2Angular
+    ports:
+      - 4200:4200
+  
+  mongodb:
+    image: mongo
+    ports: 
+      - 27017:27017
+
+
+
+  java_app:
+    container_name: java_app
+    build: ./proyecto2_api
+    ports:
+     - 8080:8080
+
+  #  mongodb:
+  #   image: mongo
+  #   ports:
+  #     - "27017:27017"
+    # volumes:
+    #   - mongo-data:/data/db
+  
+ 
+

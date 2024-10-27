@@ -5,12 +5,16 @@
 package Servlets;
 
 //import com.fasterxml.jackson.databind.ObjectMapper;
+import DatosBD.ConexionMongo;
+import DatosBD.MongoCliente;
 import Model.JsonUtil;
 import Model.Usuario;
 import Model.login;
 import Service.LoginService;
 
 import com.google.gson.Gson;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoIterable;
 import exceptions.InvalidDataException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,6 +22,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,31 +35,37 @@ import java.util.logging.Logger;
 @WebServlet(name = "LoginController", urlPatterns = {"/v1/login"})
 
 public class Login extends HttpServlet {
-    JsonUtil  jsonUtil= new  JsonUtil();
+
+    JsonUtil jsonUtil = new JsonUtil();
 
     login login = new login();
     private LoginService loginService = new LoginService();
     private final Gson gson = new Gson();
 
 
+    
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         System.out.println("Entre al servlet Login");
-        
+
         String body = jsonUtil.getBody(request);
-        System.out.println(body);
+         System.out.println(body);
+
         try {
-            
-            
             loginService.procesarSolicitud(body, response);
+            
+            
+            //loginService.procesarSolicitud(body, response);
         } catch (InvalidDataException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            
+            ex.printStackTrace();
+         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
+        
+        
         }
-
-
     }
-
 
 }

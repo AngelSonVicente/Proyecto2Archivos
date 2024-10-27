@@ -4,10 +4,15 @@
  */
 package DatosBD;
 
+import Model.JsonUtil;
+import Model.Usuario;
+import com.mongodb.client.MongoIterable;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.bson.Document;
 
 /**
  *
@@ -15,46 +20,35 @@ import java.sql.SQLException;
  */
 public class LoginBD {
 
-    Connection conexion =null;
+    ConexionMongo conexionMongo;
+    JsonUtil jsonUtil = new JsonUtil();
 
     public LoginBD() {
-        
-        ConexionPG conexionPG = new ConexionPG();
-       conexion = conexionPG.getConexion();
-        
+        conexionMongo = new ConexionMongo();
     }
-    
-    
 
-    
-        public String obtnerContra(int codigo, String tipo) {
-            
-            //solo para los usuarios usuarios :)
-         String SelectPassword = "SELECT contrasena FROM empleados."+tipo+" WHERE codigo = ?";
-         
-            
-            
-            
-        try {
-            PreparedStatement select = conexion.prepareStatement(SelectPassword);
-           
-        
-            select.setInt(1, codigo);
-            
-            System.out.println(select.toString());
-            
-            ResultSet resultset = select.executeQuery();
+    public String obtnerContra(String usuario) throws IOException {
 
-            if (resultset.next()) {
-                return resultset.getString("contrasena");
+        Document filtro = new Document("usuario", usuario);
+
+        MongoIterable<Document> documents = conexionMongo.getConnection().getCollection("usuarios").find(filtro);
+
+        if (documents.iterator().hasNext()) {
+
+            System.out.println("\n\n\nUSUARIO ENCONTRADO_______________________________________________________");
+
+            for (Document doc : documents) {
+
+                Usuario userBD = (Usuario) jsonUtil.JsonStringAObjeto(doc.toJson(), Usuario.class);
+                System.out.println(doc.toJson() + "\n" + userBD);
+                
+                return userBD.getPassword();
+
             }
 
-            
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
+        } 
+        
         return null;
     }
-    
+
 }

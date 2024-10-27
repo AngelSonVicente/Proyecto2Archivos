@@ -5,13 +5,17 @@
 package DatosBD;
 
 import DatosBD.ConexionBD;
+import Model.JsonUtil;
 import Model.Usuario;
 import Model.Util;
+import com.mongodb.client.MongoIterable;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import org.bson.Document;
 
 /**
  *
@@ -20,11 +24,16 @@ import java.util.Optional;
 public class UsuarioBD {
     
     Connection conexion = null;
+    ConexionMongo conexionMongo;
+    JsonUtil jsonUtil = new JsonUtil();
     
     public UsuarioBD() {
         
         ConexionPG conexionPG = new ConexionPG();
         conexion = conexionPG.getConexion();
+        conexionMongo = new ConexionMongo();
+               
+        
     }
     
     private static final String SELECT_BY_ID = "SELECT * FROM empleados.usuarios WHERE codigo=?;";
@@ -80,6 +89,39 @@ public class UsuarioBD {
         
         return null;
     }
+    
+    public Usuario getUsuarioByUser(String usuario) throws IOException{
+    
+           Document filtro = new Document("usuario", usuario);
+
+        MongoIterable<Document> documents = conexionMongo.getConnection().getCollection("usuarios").find(filtro);
+
+        if (documents.iterator().hasNext()) {
+
+          
+            System.out.println("\n\n\nUSUARIO ENCONTRADO_______________________________________________________");
+
+            for (Document doc : documents) {
+
+                Usuario userBD = (Usuario) jsonUtil.JsonStringAObjeto(doc.toJson(), Usuario.class);
+                System.out.println(doc.toJson() + "\n" + userBD);
+                
+                userBD.setPassword(" ");
+                
+                return userBD;
+
+            }
+
+        } 
+        
+        return null;
+    
+        
+    
+    }
+    
+    
+    
 
 //    private Connection conexion;
 //

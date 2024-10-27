@@ -8,43 +8,42 @@ import DatosBD.LoginBD;
 import DatosBD.UsuarioBD;
 import Model.Usuario;
 import Model.Util;
+import java.io.IOException;
 
 /**
  *
  * @author MSI
  */
 public class LoginController {
-    
-    private LoginBD loginBD= new LoginBD();
+
+    private LoginBD loginBD = new LoginBD();
     private Util util = new Util();
-    
-        public Usuario IsLogin(String ContraIngresada, int codigo, String tipo) {
+
+    public Usuario IsLogin(String ContraIngresada, String usuarioIngresado, String tipo) throws IOException {
 
         UsuarioBD usuarioBD = new UsuarioBD();
         String ContraEncriptada = util.Encriptar(ContraIngresada);
 
-        String Contra = loginBD.obtnerContra(codigo,tipo);
+        String Contra = loginBD.obtnerContra(usuarioIngresado);
+
         Usuario usuario = new Usuario();
 
         System.out.println("contra ingresada: " + ContraEncriptada);
-        System.out.println("usuario ingresado: " + codigo);
-        System.out.println("contra : " + Contra);
-        System.out.println("contra : " + Contra);
-        
+        System.out.println("usuario ingresado: " + usuarioIngresado);
+        System.out.println("contra real : " + Contra);
 
         if (ContraEncriptada.equals(Contra)) {
-            System.out.println("si ingresó");
+            System.out.println("\n SI INGRESOOO");
 
-            usuario = usuarioBD.getUsuarioCodigo(codigo);
-          
+            usuario = usuarioBD.getUsuarioByUser(usuarioIngresado);
+
             return usuario;
 
-        }else{
+        } else {
             System.out.println("NO INGRESO :c ");
         }
 
         return null;
     }
-    
-    
+
 }

@@ -107,8 +107,14 @@ public class Usuario {
     public void setCodigoBodega(int codigoBodega) {
         this.codigoBodega = codigoBodega;
     }
+
+    @Override
+    public String toString() {
+        return "Usuario{" + "codigo=" + codigo + ", nombre=" + nombre + ", usuario=" + usuario + ", correo=" + correo + ", password=" + password + ", tipo=" + tipo + ", codigoSucursal=" + codigoSucursal + ", codigoCaja=" + codigoCaja + ", codigoBodega=" + codigoBodega + '}';
+    }
   
   
+    
     
 
     
