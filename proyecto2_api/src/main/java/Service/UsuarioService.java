@@ -24,6 +24,19 @@ public class UsuarioService {
 
     UsuarioController usuarioController = new UsuarioController();
 
+    public void getUsuario(String usuario, HttpServletResponse response) throws IOException {
+
+        if (usuario != null) {
+
+            jsonUtil.EnviarJson(response, usuarioController.getUsuerioCompletoBYUser(usuario));
+        } else {
+
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+        }
+
+    }
+
     public void CrearUsuario(String body, HttpServletResponse response) throws InvalidDataException, IOException, SQLException {
 
         Usuario usuario = (Usuario) jsonUtil.JsonStringAObjeto(body, Usuario.class);

@@ -13,6 +13,7 @@ import { LoginComponent } from './login/login.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModuloUsuarioComponent } from './ModuloUsuario/modulo-usuario/modulo-usuario.component';
+import { SubCarpetaUsuarioComponent } from './ModuloUsuario/sub-carpeta-usuario/sub-carpeta-usuario.component';
 
 
 
@@ -22,6 +23,7 @@ import { ModuloUsuarioComponent } from './ModuloUsuario/modulo-usuario/modulo-us
     MenuComponent,
     LoginComponent,
     ModuloUsuarioComponent,
+    SubCarpetaUsuarioComponent,
 
     
   ],

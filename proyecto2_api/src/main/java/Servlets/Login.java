@@ -7,6 +7,7 @@ package Servlets;
 //import com.fasterxml.jackson.databind.ObjectMapper;
 import DatosBD.ConexionMongo;
 import DatosBD.MongoCliente;
+import DatosBD.UsuarioBD;
 import Model.JsonUtil;
 import Model.Usuario;
 import Model.login;
@@ -42,7 +43,22 @@ public class Login extends HttpServlet {
     private LoginService loginService = new LoginService();
     private final Gson gson = new Gson();
 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+    
+        UsuarioBD usuario = new UsuarioBD();
+        
+        System.out.println(usuario.getUsuarioCompletoByUser("usuario5").toString());
+        
+        
+        
+        
+    
+    }
 
+
+    
     
 
     @Override

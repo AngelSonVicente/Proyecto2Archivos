@@ -5,7 +5,10 @@
 package DatosBD;
 
 import DatosBD.ConexionBD;
+import Model.Archivo;
+import Model.Carpeta;
 import Model.JsonUtil;
+import Model.User;
 import Model.Usuario;
 import Model.Util;
 import com.mongodb.client.MongoIterable;
@@ -14,6 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import org.bson.Document;
 
@@ -22,23 +26,22 @@ import org.bson.Document;
  * @author MSI
  */
 public class UsuarioBD {
-    
+
     Connection conexion = null;
     ConexionMongo conexionMongo;
     JsonUtil jsonUtil = new JsonUtil();
-    
+
     public UsuarioBD() {
-        
+
         ConexionPG conexionPG = new ConexionPG();
         conexion = conexionPG.getConexion();
         conexionMongo = new ConexionMongo();
-               
-        
+
     }
-    
+
     private static final String SELECT_BY_ID = "SELECT * FROM empleados.usuarios WHERE codigo=?;";
     private static final String CREAR_USUARIO = "SELECT empleados.crear_empleados(?,?,?,?,?,?,?,?)";
-    
+
     public Usuario getUsuarioCodigo(int codigo) {
         // validateCarnet not null
         try {
@@ -47,7 +50,7 @@ public class UsuarioBD {
             ResultSet resultset = select.executeQuery();
             System.out.println("----------------------------------------------------");
             System.out.println(select.toString());
-            
+
             if (resultset.next()) {
                 return new Usuario(resultset.getInt("codigo"),
                         resultset.getString("nombre"), resultset.getString("usuario"),
@@ -55,18 +58,18 @@ public class UsuarioBD {
                         resultset.getInt("codigo_sucursal"), resultset.getInt("codigo_caja"), resultset.getInt("codigo_bodega")
                 );
             }
-            
+
             return null;
         } catch (SQLException ex) {
             // TODO pendiente manejo
             ex.printStackTrace();
         }
-        
+
         return null;
     }
-    
+
     public Usuario crearUsuario(Usuario usuario) throws SQLException {
-        
+
         PreparedStatement insert = conexion.prepareStatement(CREAR_USUARIO);
         insert.setString(1, usuario.getTipo());
         insert.setString(2, usuario.getNombre());
@@ -76,52 +79,94 @@ public class UsuarioBD {
         insert.setInt(6, usuario.getCodigoBodega());
         insert.setInt(7, usuario.getCodigoSucursal());
         insert.setInt(8, usuario.getCodigoCaja());
-        
+
         System.out.println("------------Creando VENTA------------");
         System.out.println(insert.toString());
         ResultSet resultset = insert.executeQuery();
         if (resultset.next()) {
-            
+
             usuario.setCodigo(resultset.getInt(1));
-            
+
             return usuario;
         }
-        
+
         return null;
     }
-    
-    public Usuario getUsuarioByUser(String usuario) throws IOException{
-    
-           Document filtro = new Document("usuario", usuario);
+
+    public Usuario getUsuarioByUser(String usuario) throws IOException {
+
+        Document filtro = new Document("usuario", usuario);
 
         MongoIterable<Document> documents = conexionMongo.getConnection().getCollection("usuarios").find(filtro);
 
         if (documents.iterator().hasNext()) {
 
-          
             System.out.println("\n\n\nUSUARIO ENCONTRADO_______________________________________________________");
 
             for (Document doc : documents) {
 
                 Usuario userBD = (Usuario) jsonUtil.JsonStringAObjeto(doc.toJson(), Usuario.class);
                 System.out.println(doc.toJson() + "\n" + userBD);
-                
+
                 userBD.setPassword(" ");
-                
+
                 return userBD;
 
             }
 
-        } 
-        
+        }
+
         return null;
-    
-        
-    
+
     }
-    
-    
-    
+
+    public User getUsuarioCompletoByUser(String usuario) throws IOException {
+
+        Document filtro = new Document("usuario", usuario);
+
+        Document doc = conexionMongo.getConnection().getCollection("usuarios").find(filtro).first();
+
+        if (doc != null) {
+
+            System.out.println("\n\n\nUSUARIO ENCONTRADO_______________________________________________________");
+
+        }
+
+        return doc != null ? mapearDocumentoAUsuario(doc) : null;
+
+    }
+
+    private User mapearDocumentoAUsuario(Document doc) {
+
+        return new User(doc.getObjectId("_id").toString(), doc.getString("usuario"), doc.getString("nombre"), doc.getString("correo"), null, doc.getString("tipo"), mapearDocumentoACarpeta(doc.get("carpetaRaiz", Document.class)));
+
+    }
+
+    private Carpeta mapearDocumentoACarpeta(Document doc) {
+        Carpeta carpeta = new Carpeta();
+        carpeta.setId(doc.getObjectId("_id").toString());
+        carpeta.setNombre(doc.getString("nombre"));
+
+        List<Document> archivosDoc = (List<Document>) doc.get("archivos");
+        List<Archivo> archivos = archivosDoc.stream().map(this::mapearDocumentoAArchivo).toList();
+        carpeta.setArchivos(archivos);
+
+        List<Document> subcarpetasDoc = (List<Document>) doc.get("subcarpetas");
+        List<Carpeta> subcarpetas = subcarpetasDoc.stream().map(this::mapearDocumentoACarpeta).toList();
+        carpeta.setSubcarpetas(subcarpetas);
+
+        return carpeta;
+    }
+
+    private Archivo mapearDocumentoAArchivo(Document doc) {
+        Archivo archivo = new Archivo();
+        archivo.setId(doc.getObjectId("_id").toString());
+        archivo.setNombre(doc.getString("nombre"));
+        archivo.setTipo(doc.getString("tipo"));
+     
+        archivo.setTamaño(doc.getInteger("tamaño"));
+        return archivo;
+    }
 
 //    private Connection conexion;
 //

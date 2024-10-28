@@ -4,8 +4,6 @@
  */
 package Servlets;
 
-
-
 import Model.JsonUtil;
 import Model.Usuario;
 import Service.UsuarioService;
@@ -32,6 +30,26 @@ public class UsuarioServlet extends HttpServlet {
     JsonUtil jsonUtil = new JsonUtil<Usuario>();
 
     UsuarioService usuarioService = new UsuarioService();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String usuario = request.getParameter("user");
+        
+        System.out.println("UsuarioGet: " +usuario);
+        try {
+            usuarioService.getUsuario(usuario, response);
+            
+            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+
+        }
+
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

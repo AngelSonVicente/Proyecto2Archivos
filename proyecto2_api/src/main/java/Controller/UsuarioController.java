@@ -7,6 +7,7 @@ package Controller;
 
 import DatosBD.UsuarioBD;
 import Model.JsonUtil;
+import Model.User;
 import Model.Usuario;
 import Service.UsuarioService;
 import exceptions.InvalidDataException;
@@ -28,6 +29,11 @@ public class UsuarioController {
     
     
     
+    }
+    public User getUsuerioCompletoBYUser(String usuario) throws IOException{
+    
+        return usuarioBD.getUsuarioCompletoByUser(usuario);
+                
     }
 
     
