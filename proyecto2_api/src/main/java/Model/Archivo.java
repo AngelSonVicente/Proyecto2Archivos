@@ -12,6 +12,7 @@ public class Archivo {
     
     private String _id;
     private String nombre;
+    private String path;
     private String tipo;
     private byte[]contenido;
     private int tamaño;
@@ -19,9 +20,10 @@ public class Archivo {
     public Archivo() {
     }
 
-    public Archivo(String _id, String nombre, String tipo, byte[] contenido, int tamaño) {
+    public Archivo(String _id, String nombre, String path, String tipo, byte[] contenido, int tamaño) {
         this._id = _id;
         this.nombre = nombre;
+        this.path = path;
         this.tipo = tipo;
         this.contenido = contenido;
         this.tamaño = tamaño;
@@ -41,6 +43,14 @@ public class Archivo {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getTipo() {
@@ -69,7 +79,7 @@ public class Archivo {
 
     @Override
     public String toString() {
-        return "Archivo{" + "_id=" + _id + ", nombre=" + nombre + ", tipo=" + tipo + ", contenido=" + contenido + ", tama\u00f1o=" + tamaño + '}';
+        return "Archivo{" + "_id=" + _id + ", nombre=" + nombre + ", path=" + path + ", tipo=" + tipo + ", contenido=" + contenido + ", tama\u00f1o=" + tamaño + '}';
     }
 
     

@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import {Usuario} from 'src/entities/Usuario';
 import { User } from "src/entities/User";
 import { Carpeta } from "src/entities/Carpeta";
+import { CrearCarpeta } from "src/entities/CrearCarpeta";
 @Injectable({
     providedIn: 'root'
 })
@@ -13,11 +14,10 @@ export class SubCarpetaService {
 
     constructor(private httpClient: HttpClient) {}
 
-    public crearSubCarpeta(usuario: Usuario): Observable<Usuario> {
+    public crearSubCarpeta(carpeta: CrearCarpeta): Observable<CrearCarpeta> {
 
-        console.log('connectando con el BE: ' + usuario);
-        console.log('Tipo: ' + usuario.tipo);
-        return this.httpClient.post<Usuario>(this.API_URL + "Usuario", usuario);
+      
+        return this.httpClient.post<CrearCarpeta>(this.API_URL + "SubCarpeta", carpeta);
     }
 
 

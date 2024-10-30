@@ -11,7 +11,7 @@ package Model;
  */
 public class Usuario {
 
-  private int codigo;
+  private String codigo;
   private String nombre;
   private String usuario;
   private String correo;
@@ -24,7 +24,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(int codigo, String nombre, String usuario, String correo, String password, String tipo, int codigoSucursal, int codigoCaja, int codigoBodega) {
+    public Usuario(String codigo, String nombre, String usuario, String correo, String password, String tipo, int codigoSucursal, int codigoCaja, int codigoBodega) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.usuario = usuario;
@@ -36,11 +36,11 @@ public class Usuario {
         this.codigoBodega = codigoBodega;
     }
 
-    public int getCodigo() {
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
@@ -112,11 +112,8 @@ public class Usuario {
     public String toString() {
         return "Usuario{" + "codigo=" + codigo + ", nombre=" + nombre + ", usuario=" + usuario + ", correo=" + correo + ", password=" + password + ", tipo=" + tipo + ", codigoSucursal=" + codigoSucursal + ", codigoCaja=" + codigoCaja + ", codigoBodega=" + codigoBodega + '}';
     }
-  
-  
-    
-    
 
+    
     
 
 }

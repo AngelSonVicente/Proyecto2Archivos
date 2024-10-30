@@ -34,16 +34,13 @@ public class UsuarioBD {
 
     ConexionMongo conexionMongo;
     JsonUtil jsonUtil = new JsonUtil();
-   
-    
+
     public UsuarioBD() {
 
         conexionMongo = new ConexionMongo();
 
     }
 
-   
-    
     public Usuario getUsuarioByUser(String usuario) throws IOException {
 
         Document filtro = new Document("usuario", usuario);
@@ -57,9 +54,11 @@ public class UsuarioBD {
             for (Document doc : documents) {
 
                 Usuario userBD = (Usuario) jsonUtil.JsonStringAObjeto(doc.toJson(), Usuario.class);
+                userBD.setCodigo(doc.getObjectId("_id").toString());
                 System.out.println(doc.toJson() + "\n" + userBD);
 
                 userBD.setPassword(" ");
+                System.out.println("USUARIO usuario: " + userBD);
 
                 return userBD;
 
@@ -83,41 +82,56 @@ public class UsuarioBD {
 
     private User mapearDocumentoAUsuario(Document doc) {
 
-        return new User(doc.getObjectId("_id").toString(), doc.getString("usuario"), doc.getString("nombre"), doc.getString("correo"), null, doc.getString("tipo"), mapearDocumentoACarpeta(doc.get("carpetaRaiz", Document.class)));
+        User usuario = new User(doc.getObjectId("_id").toString(), doc.getString("usuario"), doc.getString("nombre"), doc.getString("email"), null, doc.getString("tipo"), mapearDocumentoACarpeta(doc.get("carpetaRaiz", Document.class)));
+
+        System.out.println("\n\nUSUARIO COMPLETO: " + usuario);
+
+        return usuario;
 
     }
 
     private Carpeta mapearDocumentoACarpeta(Document doc) {
         Carpeta carpeta = new Carpeta();
+
         carpeta.setId(doc.getObjectId("_id").toString());
         carpeta.setNombre(doc.getString("nombre"));
+        carpeta.setPath(doc.getString("path"));
 
-        List<Document> archivosDoc = (List<Document>) doc.get("archivos");
-        List<Archivo> archivos = archivosDoc.stream().map(this::mapearDocumentoAArchivo).toList();
-        carpeta.setArchivos(archivos);
+        if (doc.get("archivos") != null) {
+            List<Document> archivosDoc = (List<Document>) doc.get("archivos");
+            List<Archivo> archivos = archivosDoc.stream().map(this::mapearDocumentoAArchivo).toList();
+            carpeta.setArchivos(archivos);
+        }
 
-        List<Document> subcarpetasDoc = (List<Document>) doc.get("subcarpetas");
-        List<Carpeta> subcarpetas = subcarpetasDoc.stream().map(this::mapearDocumentoACarpeta).toList();
-        carpeta.setSubcarpetas(subcarpetas);
+        if (doc.get("subcarpetas") != null) {
+            List<Document> subcarpetasDoc = (List<Document>) doc.get("subcarpetas");
+            List<Carpeta> subcarpetas = subcarpetasDoc.stream().map(this::mapearDocumentoACarpeta).toList();
+            carpeta.setSubcarpetas(subcarpetas);
+        }
 
         return carpeta;
     }
 
     private Archivo mapearDocumentoAArchivo(Document doc) {
         Archivo archivo = new Archivo();
+
         archivo.setId(doc.getObjectId("_id").toString());
         archivo.setNombre(doc.getString("nombre"));
+        archivo.setPath(doc.getString("path"));
         archivo.setTipo(doc.getString("tipo"));
 
         archivo.setTamaño(doc.getInteger("tamaño"));
+
         return archivo;
     }
 
     // Método para agregar una subcarpeta a una carpeta existente por su _id
-    public boolean agregarSubcarpeta(String usuarioId, String carpetaId, String nombreSubcarpeta) {
+    public boolean agregarSubcarpeta(String usuarioId, String carpetaId, String nombreSubcarpeta, String pathPadre) {
         // Crear la subcarpeta sin especificar un _id (MongoDB asignará uno automáticamente)
         Document subcarpeta = new Document()
+                .append("_id", new ObjectId())
                 .append("nombre", nombreSubcarpeta)
+                .append("nombre", pathPadre + "/" + nombreSubcarpeta)
                 .append("archivos", new ArrayList<>())
                 .append("subcarpetas", new ArrayList<>());
 
@@ -129,6 +143,24 @@ public class UsuarioBD {
 
         // Actualización para añadir la subcarpeta en la lista "subcarpetas" de la carpeta especificada
         Bson actualizacion = Updates.push("carpetaRaiz.subcarpetas.$.subcarpetas", subcarpeta);
+
+        // Ejecutar la actualización
+        return conexionMongo.getConnection().getCollection("usuarios").updateOne(filtro, actualizacion).getModifiedCount() > 0;
+    }
+
+    public boolean agregarSubcarpeta(String usuarioId, String nombreSubcarpeta, String pathPadre) {
+        // Crear la subcarpeta sin especificar un _id (MongoDB asignará uno automáticamente)
+        Document subcarpeta = new Document()
+                .append("_id", new ObjectId()) // MongoDB asignará automáticamente un _id
+                .append("nombre", nombreSubcarpeta)
+                .append("path", pathPadre + "/" + nombreSubcarpeta)
+                .append("archivos", new ArrayList<>())
+                .append("subcarpetas", new ArrayList<>());
+
+        // Filtro para localizar el usuario por su _id
+        Bson filtro = Filters.eq("_id", new ObjectId(usuarioId));
+
+        Bson actualizacion = Updates.push("carpetaRaiz.subcarpetas", subcarpeta);
 
         // Ejecutar la actualización
         return conexionMongo.getConnection().getCollection("usuarios").updateOne(filtro, actualizacion).getModifiedCount() > 0;
@@ -184,10 +216,8 @@ public class UsuarioBD {
         }
         return null; // Retorna null si no se encuentra la subcarpeta
     }
-    
-    
-    
-     public Usuario crearUsuario(Usuario usuario) {
+
+    public Usuario crearUsuario(Usuario usuario) {
         // Crear el documento del usuario
         Document usuarioCrear = new Document("nombre", usuario.getNombre())
                 .append("usuario", usuario.getUsuario())
@@ -195,8 +225,9 @@ public class UsuarioBD {
                 .append("email", usuario.getCorreo())
                 .append("tipo", "usuario")
                 .append("carpetaRaiz", new Document()
-                        .append("nombre", "nube"+usuario.getUsuario())
-                   
+                        .append("_id", new ObjectId())
+                        .append("nombre", "nube" + usuario.getUsuario())
+                        .append("path", "/raiz" + usuario.getUsuario())
                         .append("archivos", new ArrayList<>())
                         .append("subcarpetas", new ArrayList<>())
                 );
@@ -205,12 +236,11 @@ public class UsuarioBD {
         conexionMongo.getConnection().getCollection("usuarios").insertOne(usuarioCrear);
 
         System.out.println("Usuario creado exitosamente: " + usuarioCrear.toJson());
-        
+
+        Util.crearCarpeta("/raiz" + usuario.getUsuario());
+
         return usuario;
     }
-    
-    
-    
 
 //    private Connection conexion;
 //

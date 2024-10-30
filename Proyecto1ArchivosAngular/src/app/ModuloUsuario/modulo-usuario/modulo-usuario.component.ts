@@ -14,6 +14,9 @@ export class ModuloUsuarioComponent implements OnInit{
 
   usuarioCompleto!:User;
   usuario!:Usuario;
+  carpetas:boolean=false;
+  archivos:boolean=false;
+
 
 
   constructor(private usuarioService : UsuarioService, private router:Router){
@@ -51,6 +54,11 @@ export class ModuloUsuarioComponent implements OnInit{
 
 
 
+    this.verificarCarpetas();
+    this.verificararchivos();
+
+
+
  
   }
 
@@ -61,7 +69,14 @@ export class ModuloUsuarioComponent implements OnInit{
 
 
   }
+  verificarCarpetas(): void {
+    this.carpetas = this.usuarioCompleto?.carpetaRaiz?.subcarpetas?.length > 0;
+  }
 
+
+  verificararchivos(): void {
+    this.carpetas = this.usuarioCompleto?.carpetaRaiz?.archivos?.length > 0;
+  }
 
 
 }

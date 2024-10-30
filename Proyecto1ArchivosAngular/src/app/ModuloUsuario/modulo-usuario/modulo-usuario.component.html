@@ -1,6 +1,36 @@
 <nav class="navbar navbar-light bg-light">
     <form class="container-fluid justify-content-start">
-      <button class="btn btn-outline-primary me-2" type="button">Crear Carpeta</button>
+     
+      
+
+
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Crear Carpeta
+    </button>
+    
+    
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Crear Carpeta </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <app-crear-sub-carpeta-raiz></app-crear-sub-carpeta-raiz>
+    
+                </div>
+    
+    
+    
+    
+            </div>
+        </div>
+    </div>
+
+
       
       
       
@@ -21,6 +51,9 @@
     </form>
   </nav>
 
+
+
+  <div *ngIf="!carpetas">
   
 <div *ngFor="let carpeta of usuarioCompleto.carpetaRaiz.subcarpetas">
     <div class="card mb-3" style="max-width: 1500px;" >
@@ -46,9 +79,12 @@
 
 
 
+  </div>
 
+  
 
-
+<div *ngIf="!archivos">
+  
 <div *ngFor="let archivo of usuarioCompleto.carpetaRaiz.archivos" >
     <div class="card mb-3" style="max-width: 1500px;">
         <div class="row g-0">
@@ -68,3 +104,5 @@
         </div>
       </div>
 </div>
+</div>
+

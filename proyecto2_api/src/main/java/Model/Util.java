@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -145,5 +146,20 @@ public class Util {
         }
         return false;
     }
+    
+    
+    public static void crearCarpeta(String path){
+        
+        File directorio = new File(System.getProperty("user.dir")+path);
+        if (!directorio.exists()) {
+            if (directorio.mkdirs()) {
+                System.out.println("\n\n Directorio creado en : "+path);
+            } else {
+                System.out.println("\n\nError al crear directorio");
+            }
+        }
+    
+    
+    } 
 
 }

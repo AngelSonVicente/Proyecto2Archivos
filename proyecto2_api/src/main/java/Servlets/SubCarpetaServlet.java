@@ -4,6 +4,7 @@
  */
 package Servlets;
 
+import Model.JsonUtil;
 import Service.SubCarpetaService;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "SubCarpetaConstroller", urlPatterns = {"/v1/SubCarpeta"})
 public class SubCarpetaServlet extends HttpServlet {
     
+    JsonUtil jsonUtil = new JsonUtil();
     SubCarpetaService subCarpeta = new SubCarpetaService();
     
     @Override
@@ -31,5 +33,21 @@ public class SubCarpetaServlet extends HttpServlet {
         subCarpeta.getSubCarpeta(codigoUsuario, codigoCarpeta, response);
         
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        String body = jsonUtil.getBody(request);
+        System.out.println(body);
+        
+        subCarpeta.CrearSubCarpeta(body, response);
+        
+        
+    
+        
+    }
+    
+    
+    
     
 }

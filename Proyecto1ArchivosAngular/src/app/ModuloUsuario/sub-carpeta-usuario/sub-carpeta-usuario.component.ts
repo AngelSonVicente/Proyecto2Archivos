@@ -39,7 +39,7 @@ constructor( private route: ActivatedRoute, private subCarpetaService: SubCarpet
   
 
 
-  this.subCarpetaService.getSubCarpeta(this.usuario._id,this.codigoCarpeta).subscribe({
+  this.subCarpetaService.getSubCarpeta(this.usuario.codigo,this.codigoCarpeta).subscribe({
 
     next: (clienteBD: Carpeta) => {
 

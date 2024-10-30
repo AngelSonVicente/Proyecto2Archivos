@@ -14,15 +14,17 @@ public class Carpeta {
     
     private String _id;
     private String nombre;
+    private String path;
     private List<Archivo> archivos;
     private List<Carpeta> subcarpetas;
 
     public Carpeta() {
     }
 
-    public Carpeta(String _id, String nombre, List<Archivo> archivos, List<Carpeta> subcarpetas) {
+    public Carpeta(String _id, String nombre, String path, List<Archivo> archivos, List<Carpeta> subcarpetas) {
         this._id = _id;
         this.nombre = nombre;
+        this.path = path;
         this.archivos = archivos;
         this.subcarpetas = subcarpetas;
     }
@@ -43,6 +45,14 @@ public class Carpeta {
         this.nombre = nombre;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public List<Archivo> getArchivos() {
         return archivos;
     }
@@ -61,7 +71,7 @@ public class Carpeta {
 
     @Override
     public String toString() {
-        return "Carpeta{" + "_id=" + _id + ", nombre=" + nombre + ", archivos=" + archivos + ", subcarpetas=" + subcarpetas + '}';
+        return "Carpeta{" + "_id=" + _id + ", nombre=" + nombre + ", path=" + path + ", archivos=" + archivos + ", subcarpetas=" + subcarpetas + '}';
     }
 
     

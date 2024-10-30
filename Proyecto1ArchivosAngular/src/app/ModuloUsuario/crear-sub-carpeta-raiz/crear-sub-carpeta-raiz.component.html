@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-success" role="alert" *ngIf="saved">
+                Carpeta Creada Exitosamente.
+
+            </div>
+            
+            <div class="alert alert-danger" role="alert" *ngIf="error">
+            ya hay una carpeta con este nombre!
+
+            </div>
+
+            <h1>Registro Usuario</h1>
+            <form [formGroup]="FormularioOferta" (ngSubmit)="submit()">
+                <div class="form-row">
+
+
+
+                    <div class="form-group">
+                        <label for="inputAddress">Nombre</label>
+                        <input class="form-control"
+                            [class.is-invalid]="FormularioOferta.controls['nombre'].invalid && FormularioOferta.controls['nombre'].touched"
+                            id="nombre" name="nombre" formControlName="nombre" />
+
+                        <div *ngIf="FormularioOferta.controls['nombre'].invalid && (FormularioOferta.controls['nombre'].dirty || FormularioOferta.controls['nombre'].touched)"
+                            class="invalid-feedback">
+                            <div>
+                                Por favor ingrese el nombre
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    
+
+
+                    <br />
+                    <button class="btn btn-success" type="submit" [disabled]="FormularioOferta.invalid">Crear</button>
+                </div>
+            </form>
+        </div>

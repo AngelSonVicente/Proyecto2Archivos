@@ -17,6 +17,7 @@ import { SubCarpetaUsuarioComponent } from './ModuloUsuario/sub-carpeta-usuario/
 import { VisorArchivoComponent } from './ModuloUsuario/visor-archivo/visor-archivo.component';
 import { ModuloAdminComponent } from './ModuloAdmin/modulo-admin/modulo-admin.component';
 import { RegistrarUsuariosComponent } from './ModuloAdmin/registrar-usuarios/registrar-usuarios.component';
+import { CrearSubCarpetaRaizComponent } from './ModuloUsuario/crear-sub-carpeta-raiz/crear-sub-carpeta-raiz.component';
 
 
 
@@ -34,6 +35,7 @@ import { RegistrarUsuariosComponent } from './ModuloAdmin/registrar-usuarios/reg
     VisorArchivoComponent,
     ModuloAdminComponent,
     RegistrarUsuariosComponent,
+    CrearSubCarpetaRaizComponent,
 
     
     
