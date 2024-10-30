@@ -5,6 +5,7 @@
 package DatosBD;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.connection.Connection;
@@ -27,8 +28,8 @@ public class ConexionMongo {
     public ConexionMongo() {
 
         try {
-
-            mongo = new MongoClient(servidor, puerto);
+                                            //si  es en local sar localhost, sino mongodb
+            mongo = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
 
         } catch (MongoException e) {
 

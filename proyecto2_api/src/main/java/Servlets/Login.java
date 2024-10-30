@@ -49,8 +49,15 @@ public class Login extends HttpServlet {
     
         UsuarioBD usuario = new UsuarioBD();
         
-        System.out.println(usuario.getUsuarioCompletoByUser("usuario5").toString());
+      //  System.out.println(usuario.getUsuarioCompletoByUser("usuario5").toString());
         
+        System.out.println("\n\n\n");
+        
+        System.out.println(System.getProperty("user.dir"));
+        
+        System.out.println("\n\n\n");
+        
+     //   usuario.agregarSubcarpeta("671f374cd1f11b35d0fe6928", "671f374cd1f11b35d0fe6923", "CarpetaNueva2");
         
         
         

@@ -4,6 +4,12 @@ import { MenuComponent } from './menu/menu.component';
 import { LoginComponent } from './login/login.component';
 import { ModuloUsuarioComponent } from './ModuloUsuario/modulo-usuario/modulo-usuario.component';
 import { SubCarpetaUsuarioComponent } from './ModuloUsuario/sub-carpeta-usuario/sub-carpeta-usuario.component';
+import { VisorArchivoComponent } from './ModuloUsuario/visor-archivo/visor-archivo.component';
+import { ModuloAdminComponent } from './ModuloAdmin/modulo-admin/modulo-admin.component';
+import { RegistrarUsuariosComponent } from './ModuloAdmin/registrar-usuarios/registrar-usuarios.component';
+
+
+
 
 
 
@@ -30,13 +36,28 @@ const routes: Routes = [
   },
   {
     path: "Proyecto2/Usuario/Carpeta/:id",
-    title: "Menu",
+    title: "Carpeta",
     component: SubCarpetaUsuarioComponent
+  },  
+  {
+    path: "Proyecto2/Usuario/Archivo/:id",
+    title: "Visor",
+    component: VisorArchivoComponent
   },
   
-  
 
 
+
+    {
+    path: "Proyecto2/Modulo/Admin",
+    title: "Modulo",
+    component: ModuloAdminComponent
+  },
+  {
+    path: "Proyecto2/Admin/RegistrarUsuarios",
+    title: "Registrar Usuario",
+    component: RegistrarUsuariosComponent
+  },
 ];
 
 

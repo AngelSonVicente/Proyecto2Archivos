@@ -12,14 +12,19 @@ import Model.User;
 import Model.Usuario;
 import Model.Util;
 import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -27,72 +32,18 @@ import org.bson.Document;
  */
 public class UsuarioBD {
 
-    Connection conexion = null;
     ConexionMongo conexionMongo;
     JsonUtil jsonUtil = new JsonUtil();
-
+   
+    
     public UsuarioBD() {
 
-        ConexionPG conexionPG = new ConexionPG();
-        conexion = conexionPG.getConexion();
         conexionMongo = new ConexionMongo();
 
     }
 
-    private static final String SELECT_BY_ID = "SELECT * FROM empleados.usuarios WHERE codigo=?;";
-    private static final String CREAR_USUARIO = "SELECT empleados.crear_empleados(?,?,?,?,?,?,?,?)";
-
-    public Usuario getUsuarioCodigo(int codigo) {
-        // validateCarnet not null
-        try {
-            PreparedStatement select = conexion.prepareStatement(SELECT_BY_ID);
-            select.setInt(1, codigo);
-            ResultSet resultset = select.executeQuery();
-            System.out.println("----------------------------------------------------");
-            System.out.println(select.toString());
-
-            if (resultset.next()) {
-                return new Usuario(resultset.getInt("codigo"),
-                        resultset.getString("nombre"), resultset.getString("usuario"),
-                        resultset.getString("correo"), null, resultset.getString("tipo"),
-                        resultset.getInt("codigo_sucursal"), resultset.getInt("codigo_caja"), resultset.getInt("codigo_bodega")
-                );
-            }
-
-            return null;
-        } catch (SQLException ex) {
-            // TODO pendiente manejo
-            ex.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public Usuario crearUsuario(Usuario usuario) throws SQLException {
-
-        PreparedStatement insert = conexion.prepareStatement(CREAR_USUARIO);
-        insert.setString(1, usuario.getTipo());
-        insert.setString(2, usuario.getNombre());
-        insert.setString(3, usuario.getUsuario());
-        insert.setString(4, Util.Encriptar(usuario.getPassword()));
-        insert.setString(5, usuario.getCorreo());
-        insert.setInt(6, usuario.getCodigoBodega());
-        insert.setInt(7, usuario.getCodigoSucursal());
-        insert.setInt(8, usuario.getCodigoCaja());
-
-        System.out.println("------------Creando VENTA------------");
-        System.out.println(insert.toString());
-        ResultSet resultset = insert.executeQuery();
-        if (resultset.next()) {
-
-            usuario.setCodigo(resultset.getInt(1));
-
-            return usuario;
-        }
-
-        return null;
-    }
-
+   
+    
     public Usuario getUsuarioByUser(String usuario) throws IOException {
 
         Document filtro = new Document("usuario", usuario);
@@ -126,12 +77,6 @@ public class UsuarioBD {
 
         Document doc = conexionMongo.getConnection().getCollection("usuarios").find(filtro).first();
 
-        if (doc != null) {
-
-            System.out.println("\n\n\nUSUARIO ENCONTRADO_______________________________________________________");
-
-        }
-
         return doc != null ? mapearDocumentoAUsuario(doc) : null;
 
     }
@@ -163,10 +108,109 @@ public class UsuarioBD {
         archivo.setId(doc.getObjectId("_id").toString());
         archivo.setNombre(doc.getString("nombre"));
         archivo.setTipo(doc.getString("tipo"));
-     
+
         archivo.setTamaño(doc.getInteger("tamaño"));
         return archivo;
     }
+
+    // Método para agregar una subcarpeta a una carpeta existente por su _id
+    public boolean agregarSubcarpeta(String usuarioId, String carpetaId, String nombreSubcarpeta) {
+        // Crear la subcarpeta sin especificar un _id (MongoDB asignará uno automáticamente)
+        Document subcarpeta = new Document()
+                .append("nombre", nombreSubcarpeta)
+                .append("archivos", new ArrayList<>())
+                .append("subcarpetas", new ArrayList<>());
+
+        // Filtro para localizar al usuario y la carpeta específica en la estructura anidada
+        Bson filtro = Filters.and(
+                Filters.eq("_id", new ObjectId(usuarioId)),
+                Filters.eq("carpetaRaiz.subcarpetas._id", new ObjectId(carpetaId))
+        );
+
+        // Actualización para añadir la subcarpeta en la lista "subcarpetas" de la carpeta especificada
+        Bson actualizacion = Updates.push("carpetaRaiz.subcarpetas.$.subcarpetas", subcarpeta);
+
+        // Ejecutar la actualización
+        return conexionMongo.getConnection().getCollection("usuarios").updateOne(filtro, actualizacion).getModifiedCount() > 0;
+    }
+
+    // Método para agregar un archivo a una carpeta específica por su _id
+    public boolean agregarArchivo(String usuarioId, String carpetaId, String nombreArchivo, String tipo, byte[] contenido, int tamaño) {
+        // Crear el archivo como un documento sin especificar un _id
+        Document archivo = new Document()
+                .append("nombre", nombreArchivo)
+                .append("tipo", tipo)
+                .append("contenido", contenido) // Puede ser BinData si es binario
+                .append("tamaño", tamaño);
+
+        // Filtro para ubicar al usuario y la carpeta específica dentro de la estructura
+        Bson filtro = Filters.and(
+                Filters.eq("_id", new ObjectId(usuarioId)),
+                Filters.eq("carpetaRaiz.subcarpetas._id", new ObjectId(carpetaId))
+        );
+
+        // Actualización para añadir el archivo en la lista "archivos" de la carpeta especificada
+        Bson actualizacion = Updates.push("carpetaRaiz.subcarpetas.$.archivos", archivo);
+
+        // Ejecutar la actualización
+        return conexionMongo.getConnection().getCollection("usuarios").updateOne(filtro, actualizacion).getModifiedCount() > 0;
+    }
+
+    // Método para obtener una subcarpeta específica por su _id
+    public Carpeta getSubcarpeta(String usuarioId, String carpetaId) {
+        // Filtro para buscar la subcarpeta dentro de la estructura anidada del usuario
+        Bson filtro = Filters.and(
+                Filters.eq("_id", new ObjectId(usuarioId)),
+                Filters.elemMatch("carpetaRaiz.subcarpetas", Filters.eq("_id", new ObjectId(carpetaId)))
+        );
+
+        // Campos proyectados para devolver solo la subcarpeta encontrada
+        Bson proyeccion = new Document("carpetaRaiz.subcarpetas.$", 1);
+
+        // Realizar la consulta
+        Document usuario = conexionMongo.getConnection().getCollection("usuarios").find(filtro)
+                .projection(proyeccion)
+                .first();
+
+        if (usuario != null) {
+            // Extraer la subcarpeta de la estructura anidada
+            Document carpetaRaiz = (Document) usuario.get("carpetaRaiz");
+            if (carpetaRaiz != null) {
+                List<Document> subcarpetas = (List<Document>) carpetaRaiz.get("subcarpetas");
+                if (subcarpetas != null && !subcarpetas.isEmpty()) {
+                    return mapearDocumentoACarpeta(subcarpetas.get(0));  // Devuelve la subcarpeta encontrada
+                }
+            }
+        }
+        return null; // Retorna null si no se encuentra la subcarpeta
+    }
+    
+    
+    
+     public Usuario crearUsuario(Usuario usuario) {
+        // Crear el documento del usuario
+        Document usuarioCrear = new Document("nombre", usuario.getNombre())
+                .append("usuario", usuario.getUsuario())
+                .append("password", Util.Encriptar(usuario.getPassword()))
+                .append("email", usuario.getCorreo())
+                .append("tipo", "usuario")
+                .append("carpetaRaiz", new Document()
+                        .append("nombre", "nube"+usuario.getUsuario())
+                   
+                        .append("archivos", new ArrayList<>())
+                        .append("subcarpetas", new ArrayList<>())
+                );
+
+        // Insertar el usuario en la colección
+        conexionMongo.getConnection().getCollection("usuarios").insertOne(usuarioCrear);
+
+        System.out.println("Usuario creado exitosamente: " + usuarioCrear.toJson());
+        
+        return usuario;
+    }
+    
+    
+    
 
 //    private Connection conexion;
 //

@@ -6,6 +6,7 @@ package Controller;
 
 
 import DatosBD.UsuarioBD;
+import Model.Carpeta;
 import Model.JsonUtil;
 import Model.User;
 import Model.Usuario;
@@ -24,17 +25,33 @@ public class UsuarioController {
 
     UsuarioBD usuarioBD =new UsuarioBD();
     
-    public Usuario crearUsuario (Usuario usuario) throws SQLException{
-        return usuarioBD.crearUsuario(usuario);
+  
     
-    
-    
-    }
     public User getUsuerioCompletoBYUser(String usuario) throws IOException{
     
         return usuarioBD.getUsuarioCompletoByUser(usuario);
                 
     }
+    
+    public Carpeta getSubCarpeta(String codigoUsuario, String codigoCarpeta){
+        
+        if(codigoCarpeta!=null || codigoUsuario!=null){
+            
+            
+            
+            return usuarioBD.getSubcarpeta(codigoUsuario, codigoCarpeta);
+            
+        
+        }
+        
+    
+    return null;
+    }
 
+    
+    public Usuario crearUsuario(Usuario usuario){
+    
+    return usuarioBD.crearUsuario(usuario);
+    }
     
 }

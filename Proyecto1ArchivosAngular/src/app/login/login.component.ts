@@ -62,6 +62,13 @@ export class LoginComponent {
             
           }
 
+          if (usuario.tipo == "admin") {
+          
+              this.router.navigate(['Proyecto2/Modulo/Admin']);
+            
+          }
+
+
           
      
 

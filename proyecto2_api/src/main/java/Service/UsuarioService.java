@@ -39,17 +39,13 @@ public class UsuarioService {
 
     public void CrearUsuario(String body, HttpServletResponse response) throws InvalidDataException, IOException, SQLException {
 
-        Usuario usuario = (Usuario) jsonUtil.JsonStringAObjeto(body, Usuario.class);
-
-        usuario = usuarioController.crearUsuario(usuario);
-
-        if (usuario != null) {
-            jsonUtil.EnviarJson(response, usuario);
-
-        } else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
-        }
+        Usuario usuarioCrear= (Usuario) jsonUtil.JsonStringAObjeto(body, Usuario.class);
+        
+        
+        jsonUtil.EnviarJson(response, usuarioController.crearUsuario(usuarioCrear));
+        
+      
+        
 
     }
 

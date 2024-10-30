@@ -57,9 +57,14 @@ public class UsuarioServlet extends HttpServlet {
         System.out.println("----------------Entramos al servlet Crear Usuario-----------------------");
 
         String bosy = jsonUtil.getBody(request);
+        System.out.println("\n\n\n"+bosy);
 
         try {
+            
+            
             usuarioService.CrearUsuario(bosy, response);
+            
+            
         } catch (SQLException | InvalidDataException ex) {
 
             ex.printStackTrace();

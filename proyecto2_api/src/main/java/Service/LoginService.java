@@ -45,7 +45,7 @@ public class LoginService {
         
         
         
-        validar(UsuarioFE);
+//        validar(UsuarioFE);
 
         usuario = loginCOntroller.IsLogin(UsuarioFE.getPassword(), UsuarioFE.getUsuario(), UsuarioFE.getTipo());
 
@@ -66,7 +66,7 @@ public class LoginService {
 
     private void validar(Usuario usuario) throws InvalidDataException {
 
-        if (usuario.getUsuario() == null || usuario.getPassword() == null || usuario.getTipo() == null) {
+        if (usuario.getUsuario() == null || usuario.getPassword() == null ) {
             throw new InvalidDataException("los datos no estan completos, por favor reviselos!");
 
         }

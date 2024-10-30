@@ -14,6 +14,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModuloUsuarioComponent } from './ModuloUsuario/modulo-usuario/modulo-usuario.component';
 import { SubCarpetaUsuarioComponent } from './ModuloUsuario/sub-carpeta-usuario/sub-carpeta-usuario.component';
+import { VisorArchivoComponent } from './ModuloUsuario/visor-archivo/visor-archivo.component';
+import { ModuloAdminComponent } from './ModuloAdmin/modulo-admin/modulo-admin.component';
+import { RegistrarUsuariosComponent } from './ModuloAdmin/registrar-usuarios/registrar-usuarios.component';
+
+
+
+
 
 
 
@@ -24,7 +31,14 @@ import { SubCarpetaUsuarioComponent } from './ModuloUsuario/sub-carpeta-usuario/
     LoginComponent,
     ModuloUsuarioComponent,
     SubCarpetaUsuarioComponent,
+    VisorArchivoComponent,
+    ModuloAdminComponent,
+    RegistrarUsuariosComponent,
 
+    
+    
+    
+    
     
   ],
   imports: [
