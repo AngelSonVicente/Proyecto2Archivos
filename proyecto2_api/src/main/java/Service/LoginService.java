@@ -3,7 +3,7 @@ package Service;
 import Controller.LoginController;
 import Model.JsonUtil;
 import Model.TipoUsuario;
-import DatosBD.ConexionBD;
+
 import DatosBD.ConexionMongo;
 import Model.Usuario;
 import Model.Util;
@@ -23,8 +23,8 @@ import org.bson.Document;
 
 public class LoginService {
 
-    static Connection conexion = ConexionBD.getInstancia().getConexion();
-
+    
+    
     private JsonUtil jsonUtil = new JsonUtil();
     private LoginController loginCOntroller = new LoginController();
 
