@@ -28,8 +28,8 @@ public class ConexionMongo {
     public ConexionMongo() {
 
         try {
-                                            //si  es en local sar localhost, sino mongodb
-            mongo = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
+                                            //si  es en local usar localhost, sino mongodb
+            mongo = new MongoClient(new MongoClientURI("mongodb://mongodb:27017"));
 
         } catch (MongoException e) {
 

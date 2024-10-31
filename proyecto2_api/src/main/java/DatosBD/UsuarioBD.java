@@ -4,7 +4,7 @@
  */
 package DatosBD;
 
-import DatosBD.ConexionBD;
+
 import Model.Archivo;
 import Model.Carpeta;
 import Model.JsonUtil;
