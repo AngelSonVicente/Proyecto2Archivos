@@ -40,7 +40,7 @@ const routes: Routes = [
     component: SubCarpetaUsuarioComponent
   },  
   {
-    path: "Proyecto2/Usuario/Archivo/:id",
+    path: "Proyecto2/Usuario/Archivo/:codigoCarpeta/:codigoArchivo",
     title: "Visor",
     component: VisorArchivoComponent
   },

@@ -31,6 +31,8 @@ export class CrearSubCarpetaRaizComponent implements OnInit {
 
   constructor( private formBuilder: FormBuilder, 
     private route: ActivatedRoute, private router: Router, private subCarpetaService:SubCarpetaService) { }
+
+    
   ngOnInit(): void {
     let jsonUsuario = localStorage.getItem('usuario');
     this.usuario = jsonUsuario ? JSON.parse(jsonUsuario) : null;

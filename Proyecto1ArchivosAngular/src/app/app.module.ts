@@ -18,6 +18,7 @@ import { VisorArchivoComponent } from './ModuloUsuario/visor-archivo/visor-archi
 import { ModuloAdminComponent } from './ModuloAdmin/modulo-admin/modulo-admin.component';
 import { RegistrarUsuariosComponent } from './ModuloAdmin/registrar-usuarios/registrar-usuarios.component';
 import { CrearSubCarpetaRaizComponent } from './ModuloUsuario/crear-sub-carpeta-raiz/crear-sub-carpeta-raiz.component';
+import { CrearArchivoRaizComponent } from './ModuloUsuario/crear-archivo-raiz/crear-archivo-raiz.component';
 
 
 
@@ -36,6 +37,7 @@ import { CrearSubCarpetaRaizComponent } from './ModuloUsuario/crear-sub-carpeta-
     ModuloAdminComponent,
     RegistrarUsuariosComponent,
     CrearSubCarpetaRaizComponent,
+    CrearArchivoRaizComponent,
 
     
     

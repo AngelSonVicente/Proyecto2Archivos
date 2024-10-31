@@ -17,6 +17,7 @@ export class SubCarpetaUsuarioComponent implements OnInit {
 
   carpeta!:Carpeta;
 
+  hayArchivos:boolean=false;
 
 constructor( private route: ActivatedRoute, private subCarpetaService: SubCarpetaService){
 
@@ -54,6 +55,12 @@ constructor( private route: ActivatedRoute, private subCarpetaService: SubCarpet
   });
 
 
+  }
+
+
+
+  verificararchivos(): void {
+    this.hayArchivos = this.carpeta?.archivos?.length > 0;
   }
 
 

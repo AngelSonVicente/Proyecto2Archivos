@@ -27,8 +27,10 @@ public class SubCarpetaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        String codigoUsuario = request.getParameter("codigouUsuario");
-        String codigoCarpeta = request.getParameter("codigouCarpeta");
+        String codigoUsuario = request.getParameter("codigoUsuario");
+        String codigoCarpeta = request.getParameter("codigoCarpeta");
+        System.out.println("codigo Usuario: "+ codigoUsuario);
+        System.out.println("codigo Carpeta: "+ codigoCarpeta);
         
         subCarpeta.getSubCarpeta(codigoUsuario, codigoCarpeta, response);
         

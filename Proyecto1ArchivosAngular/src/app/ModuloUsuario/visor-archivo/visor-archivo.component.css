@@ -1,0 +1,8 @@
+textarea {
+    width: 1320px;  /* Ancho de 300 píxeles */
+  height: 550px; /* Alto de 150 píxeles */
+  border: 2px solid #007bff; /* Borde de 2px, sólido y color azul */
+  border-radius: 4px; /* Bordes redondeados */
+
+    resize: none;
+  }

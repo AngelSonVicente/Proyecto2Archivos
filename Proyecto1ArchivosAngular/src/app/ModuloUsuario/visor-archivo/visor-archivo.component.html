@@ -1,1 +1,55 @@
-<p>visor-archivo works!</p>
+
+<nav class="navbar navbar-light bg-light">
+  
+    
+  </nav>
+
+  <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-success" role="alert" *ngIf="saved">
+                Archivo Guardado Exitosamente.
+
+            </div>
+            
+            <div class="alert alert-danger" role="alert" *ngIf="error">
+            Error al Guardar el archivo, por favor intente de nuevo :( !
+
+            </div>
+
+            
+            <form [formGroup]="FormularioOferta" (ngSubmit)="submit()">
+                <div class="form-row">
+
+
+
+                    <div class="form-group">
+                      
+                        <textarea class="form-control resizable"
+                          [class.is-invalid]="FormularioOferta.controls['contenido'].invalid && FormularioOferta.controls['contenido'].touched"
+                          id="contenido" name="contenido" formControlName="contenido"></textarea>
+            
+                        <div
+                          *ngIf="FormularioOferta.controls['contenido'].invalid && (FormularioOferta.controls['contenido'].dirty || FormularioOferta.controls['contenido'].touched)"
+                          class="invalid-feedback">
+                          <div>
+                      
+                        </div>
+                        </div>
+                      </div>
+
+
+                 
+                      
+
+
+
+
+                    
+
+
+                    <br />
+                    <button class="btn btn-success" type="submit" [disabled]="FormularioOferta.invalid">Guardar</button>
+                </div>
+            </form>
+        </div>

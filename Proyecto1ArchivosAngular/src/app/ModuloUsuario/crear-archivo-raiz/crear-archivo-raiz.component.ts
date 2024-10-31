@@ -2,51 +2,40 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Archivo } from 'src/entities/Archivo';
-import { ArchivoActualizar } from 'src/entities/ArchivoActualizar';
+import { CrearArchivo } from 'src/entities/CrearArchivo';
 import { CrearCarpeta } from 'src/entities/CrearCarpeta';
 import { Usuario } from 'src/entities/Usuario';
 import { ArchivosService } from 'src/services/ArchivosService';
 import { SubCarpetaService } from 'src/services/SubCarpetaService';
 
 @Component({
-  selector: 'app-visor-archivo',
-  templateUrl: './visor-archivo.component.html',
-  styleUrls: ['./visor-archivo.component.css']
+  selector: 'app-crear-archivo-raiz',
+  templateUrl: './crear-archivo-raiz.component.html',
+  styleUrls: ['./crear-archivo-raiz.component.css']
 })
-export class VisorArchivoComponent implements OnInit{
- 
-  codigoCarpeta!:string;
-  codigoArchivo!:string;
- 
-  
+export class CrearArchivoRaizComponent implements OnInit {
+
+
+
+
 
 
   FormularioOferta!: FormGroup;
   saved : boolean=false;
 
+  ArchivoCreado!:Archivo;
 
   error: boolean = false;
   
   codigoCreado!:string;
 
-  archivoActualizar!:ArchivoActualizar;
+  archivoCreacion!:CrearArchivo;
   usuario!: Usuario;
 
 
   constructor( private formBuilder: FormBuilder, 
     private route: ActivatedRoute, private router: Router, private archivoService:ArchivosService) { }
-
-
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.codigoCarpeta = params['codigoCarpeta'];
-      this.codigoArchivo = params['codigoArchivo'];
-
-
-      console.log(this.codigoCarpeta); // Aquí tienes el valor de userRole
-    });
-
-
     let jsonUsuario = localStorage.getItem('usuario');
     this.usuario = jsonUsuario ? JSON.parse(jsonUsuario) : null;
 
@@ -54,26 +43,10 @@ export class VisorArchivoComponent implements OnInit{
 
     
 
-    this.archivoService.getArchivoRaiz(this.usuario.codigo, this.codigoArchivo).subscribe({
-      next: (oferta: Archivo) => {
-
-        
-        
-        this.FormularioOferta = this.formBuilder.group({
-        
-          contenido: [oferta.contenido],
-        
-          
-
-        });
-      }
-    });
-
-
-
 
     this.FormularioOferta = this.formBuilder.group({
-      contenido: [null],
+      nombre: [null, [Validators.required]],
+      tipo: [null, [Validators.required]],
   
       
 
@@ -87,21 +60,34 @@ export class VisorArchivoComponent implements OnInit{
 
   submit(): void {
     
-      this.archivoActualizar = this.FormularioOferta.value as ArchivoActualizar;
+      this.archivoCreacion = this.FormularioOferta.value as CrearArchivo;
       
-      this.archivoActualizar.codigoUsuario=this.usuario.codigo;
-      this.archivoActualizar.carpetaPadre=this.codigoCarpeta;
-      this.archivoActualizar._id=this.codigoArchivo;
+      this.archivoCreacion.codigoUsuario=this.usuario.codigo;
+      this.archivoCreacion.path="/raiz/";
 
     
-      this.archivoService.actualizarArchivo(this.archivoActualizar).subscribe({
+      this.archivoService.crearArchivo(this.archivoCreacion).subscribe({
         next: (created: Archivo) => {
           console.log("creado " + created);
         
+
+
+
+
+
+
+
+
+          this.ArchivoCreado=created;
+          
+          this.router.navigate(['Proyecto2/Usuario/Archivo', "raiz", this.ArchivoCreado._id]);
+          
           this.saved = true;
           this.error=false;
-         // this.limpiar()
-          window.location.reload();
+          this.limpiar()
+
+
+        //  window.location.reload();
 
         },
         error: (error: any) => {
@@ -125,9 +111,5 @@ export class VisorArchivoComponent implements OnInit{
 
 
 
- 
-  }
 
-
-
-
+}

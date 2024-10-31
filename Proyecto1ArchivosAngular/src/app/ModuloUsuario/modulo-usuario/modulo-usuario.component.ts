@@ -41,6 +41,8 @@ export class ModuloUsuarioComponent implements OnInit{
 
         this.usuarioCompleto=clienteBD;
 
+      this.usuario.codigo=this.usuarioCompleto.id;
+      localStorage.setItem('usuario', JSON.stringify(this.usuario));
         
         
       

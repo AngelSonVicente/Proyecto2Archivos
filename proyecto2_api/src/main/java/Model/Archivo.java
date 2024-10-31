@@ -11,17 +11,19 @@ package Model;
 public class Archivo {
     
     private String _id;
+    private String carpetaPadre;
     private String nombre;
     private String path;
     private String tipo;
-    private byte[]contenido;
+    private String contenido;
     private int tamaño;
 
     public Archivo() {
     }
 
-    public Archivo(String _id, String nombre, String path, String tipo, byte[] contenido, int tamaño) {
+    public Archivo(String _id, String carpetaPadre, String nombre, String path, String tipo, String contenido, int tamaño) {
         this._id = _id;
+        this.carpetaPadre = carpetaPadre;
         this.nombre = nombre;
         this.path = path;
         this.tipo = tipo;
@@ -35,6 +37,14 @@ public class Archivo {
 
     public void setId(String _id) {
         this._id = _id;
+    }
+
+    public String getCarpetaPadre() {
+        return carpetaPadre;
+    }
+
+    public void setCarpetaPadre(String carpetaPadre) {
+        this.carpetaPadre = carpetaPadre;
     }
 
     public String getNombre() {
@@ -61,11 +71,11 @@ public class Archivo {
         this.tipo = tipo;
     }
 
-    public byte[] getContenido() {
+    public String getContenido() {
         return contenido;
     }
 
-    public void setContenido(byte[] contenido) {
+    public void setContenido(String contenido) {
         this.contenido = contenido;
     }
 
@@ -79,10 +89,8 @@ public class Archivo {
 
     @Override
     public String toString() {
-        return "Archivo{" + "_id=" + _id + ", nombre=" + nombre + ", path=" + path + ", tipo=" + tipo + ", contenido=" + contenido + ", tama\u00f1o=" + tamaño + '}';
+        return "Archivo{" + "_id=" + _id + ", carpetaPadre=" + carpetaPadre + ", nombre=" + nombre + ", path=" + path + ", tipo=" + tipo + ", contenido=" + contenido + ", tama\u00f1o=" + tamaño + '}';
     }
 
-    
-    
     
 }

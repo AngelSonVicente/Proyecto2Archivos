@@ -120,8 +120,8 @@ public class UsuarioBD {
         archivo.setPath(doc.getString("path"));
         archivo.setTipo(doc.getString("tipo"));
 
-        archivo.setTamaño(doc.getInteger("tamaño"));
-
+      
+        
         return archivo;
     }
 
@@ -166,28 +166,9 @@ public class UsuarioBD {
         return conexionMongo.getConnection().getCollection("usuarios").updateOne(filtro, actualizacion).getModifiedCount() > 0;
     }
 
-    // Método para agregar un archivo a una carpeta específica por su _id
-    public boolean agregarArchivo(String usuarioId, String carpetaId, String nombreArchivo, String tipo, byte[] contenido, int tamaño) {
-        // Crear el archivo como un documento sin especificar un _id
-        Document archivo = new Document()
-                .append("nombre", nombreArchivo)
-                .append("tipo", tipo)
-                .append("contenido", contenido) // Puede ser BinData si es binario
-                .append("tamaño", tamaño);
-
-        // Filtro para ubicar al usuario y la carpeta específica dentro de la estructura
-        Bson filtro = Filters.and(
-                Filters.eq("_id", new ObjectId(usuarioId)),
-                Filters.eq("carpetaRaiz.subcarpetas._id", new ObjectId(carpetaId))
-        );
-
-        // Actualización para añadir el archivo en la lista "archivos" de la carpeta especificada
-        Bson actualizacion = Updates.push("carpetaRaiz.subcarpetas.$.archivos", archivo);
-
-        // Ejecutar la actualización
-        return conexionMongo.getConnection().getCollection("usuarios").updateOne(filtro, actualizacion).getModifiedCount() > 0;
-    }
-
+ 
+    
+    
     // Método para obtener una subcarpeta específica por su _id
     public Carpeta getSubcarpeta(String usuarioId, String carpetaId) {
         // Filtro para buscar la subcarpeta dentro de la estructura anidada del usuario

@@ -24,6 +24,8 @@ public class SubCarpetaService {
 
         Carpeta carpeta = usuarioBD.getSubcarpeta(codigoUsuario, codigoCarpeta);
 
+        System.out.println("CARPETA ENCONTRADAAA:  \n"+carpeta.toString());
+        
         if (carpeta != null) {
 
             jsonutil.EnviarJson(reponse, carpeta);
