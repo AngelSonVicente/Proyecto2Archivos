@@ -64,7 +64,7 @@ public class ArchivosService {
 
         System.out.println("ARCHIVO ENCONTRADO " + archivo);
 
-        if (archivo.getCarpetaPadre() == null) {
+        if (archivo.getCarpetaPadre().equals("raiz")) {
 
             if (archivoBD.actualizarContenidoArchivo(archivo.getCodigoUsuario(), archivo.getId(), archivo.getContenido())) {
 
