@@ -5,7 +5,7 @@
 
 
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Crear Carpeta
+        Crear Archivo
     </button>
     
     
@@ -19,8 +19,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <app-crear-sub-carpeta-raiz></app-crear-sub-carpeta-raiz>
-    
+                    <app-crear-archivo-sub-carpeta [codigoCarpeta]="this.codigoCarpeta"> </app-crear-archivo-sub-carpeta>   
                 </div>
     
     
@@ -30,51 +29,42 @@
         </div>
     </div>
 
-
-      
-      
-      
-      
-<div class="btn-group">
-    <button type="button" class="btn btn-outline-success dropdown-toggle me-2"   data-bs-toggle="dropdown" aria-expanded="false">
-      Crear Archivo
-    </button>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">HTML</a></li>
-      <li><a class="dropdown-item" href="#">JPG</a></li>
-      <li><a class="dropdown-item" href="#">PNG</a></li>
-      <li><a class="dropdown-item" href="#">TXT</a></li>
-   
-      
-    </ul>
-  </div>
     </form>
-  </nav>
 
-  
 
-  
+      
+      
+      
+</nav> 
+<div class="btn-group">
+ 
+    
+</div>
+
 
 <div *ngIf="!hayArchivos">
   
-<div *ngFor="let archivo of carpeta.archivos" >
-    <div class="card mb-3" style="max-width: 1500px;">
-        <div class="row g-0">
-          <div class="col-md-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="106" height="106" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
-                <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
-              </svg>  </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">{{archivo.nombre}}</h5>
-        
-              <p class="card-text"><small class="text-muted">{{archivo.tipo}}</small></p>
-              <a href="/Proyecto2/Usuario/Archivo/{{archivo._id}}" class="stretched-link"></a>
-  
+    <div *ngFor="let archivo of carpeta.archivos" >
+        <div class="card mb-3" style="max-width: 1500px;">
+            <div class="row g-0">
+              <div class="col-md-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="106" height="106" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
+                    <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+                  </svg>  </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{archivo.nombre}}</h5>
+            
+                  <p class="card-text"><small class="text-muted">{{archivo.tipo}}</small></p>
+                  <a href="/Proyecto2/Usuario/Archivo/{{codigoCarpeta}}/{{archivo._id}}" class="stretched-link"></a>
+      
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-</div>
-</div>
+    </div>
+
+  
+
+
 

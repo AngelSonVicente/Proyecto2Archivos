@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Archivo } from 'src/entities/Archivo';
 import { CrearArchivo } from 'src/entities/CrearArchivo';
-import { CrearCarpeta } from 'src/entities/CrearCarpeta';
 import { Usuario } from 'src/entities/Usuario';
 import { ArchivosService } from 'src/services/ArchivosService';
-import { SubCarpetaService } from 'src/services/SubCarpetaService';
 
 @Component({
-  selector: 'app-crear-archivo-raiz',
-  templateUrl: './crear-archivo-raiz.component.html',
-  styleUrls: ['./crear-archivo-raiz.component.css']
+  selector: 'app-crear-archivo-sub-carpeta',
+  templateUrl: './crear-archivo-sub-carpeta.component.html',
+  styleUrls: ['./crear-archivo-sub-carpeta.component.css']
 })
-export class CrearArchivoRaizComponent implements OnInit {
+export class CrearArchivoSubCarpetaComponent implements OnInit{
+  @Input() codigoCarpeta!: string;
+
+
 
 
 
@@ -64,6 +65,7 @@ export class CrearArchivoRaizComponent implements OnInit {
       
       this.archivoCreacion.codigoUsuario=this.usuario.codigo;
       this.archivoCreacion.path="/raiz/";
+      this.archivoCreacion.codigoCarpeta=this.codigoCarpeta;
 
     
       this.archivoService.crearArchivo(this.archivoCreacion).subscribe({
@@ -80,7 +82,7 @@ export class CrearArchivoRaizComponent implements OnInit {
 
           this.ArchivoCreado=created;
           
-          this.router.navigate(['Proyecto2/Usuario/Archivo', "raiz", this.ArchivoCreado._id]);
+          this.router.navigate(['Proyecto2/Usuario/Archivo', this.codigoCarpeta, this.ArchivoCreado._id]);
   
           
           this.saved = true;
@@ -88,7 +90,7 @@ export class CrearArchivoRaizComponent implements OnInit {
           this.limpiar()
 
 
-        //  window.location.reload();
+//          window.location.reload();
 
         },
         error: (error: any) => {
@@ -105,6 +107,9 @@ export class CrearArchivoRaizComponent implements OnInit {
     });
 
   }
+
+
+
 
 
 

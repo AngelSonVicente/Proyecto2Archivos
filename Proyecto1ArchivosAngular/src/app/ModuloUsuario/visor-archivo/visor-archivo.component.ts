@@ -18,6 +18,7 @@ export class VisorArchivoComponent implements OnInit{
   codigoCarpeta!:string;
   codigoArchivo!:string;
  
+  archivo!:Archivo;
   
 
 
@@ -54,10 +55,10 @@ export class VisorArchivoComponent implements OnInit{
 
     
 
-    this.archivoService.getArchivoRaiz(this.usuario.codigo, this.codigoArchivo).subscribe({
+    this.archivoService.getArchivoRaiz(this.usuario.codigo, this.codigoArchivo,this.codigoCarpeta).subscribe({
       next: (oferta: Archivo) => {
 
-        
+        this.archivo=oferta;
         
         this.FormularioOferta = this.formBuilder.group({
         

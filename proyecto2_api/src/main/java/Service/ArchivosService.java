@@ -28,9 +28,11 @@ public class ArchivosService {
 
         CrearArchivo crearArchivo = (CrearArchivo) jsonUtil.JsonStringAObjeto(body, CrearArchivo.class);
 
-        Archivo archivoCreado = archivoBD.agregarArchivoEnCarpetaRaiz(crearArchivo.getCodigoUsuario(), crearArchivo.getNombre(), crearArchivo.getTipo(), crearArchivo.getPath());
+        Archivo archivoCreado = new Archivo();
 
         if (crearArchivo.getCodigoCarpeta() == null) {
+            archivoCreado = archivoBD.agregarArchivoEnCarpetaRaiz(crearArchivo.getCodigoUsuario(), crearArchivo.getNombre(), crearArchivo.getTipo(), crearArchivo.getPath());
+
             if (archivoCreado != null) {
 
                 jsonUtil.EnviarJson(response, archivoCreado);
@@ -42,6 +44,16 @@ public class ArchivosService {
 
         } else {
 
+            archivoCreado = archivoBD.agregarArchivo(crearArchivo.getCodigoUsuario(), crearArchivo.getCodigoCarpeta(), crearArchivo.getNombre(), crearArchivo.getTipo(), archivoCreado.getPath());
+
+            if (archivoCreado != null) {
+                jsonUtil.EnviarJson(response, archivoCreado);
+
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+            }
+
         }
 
     }
@@ -50,10 +62,46 @@ public class ArchivosService {
 
         ArchivoActualizar archivo = (ArchivoActualizar) jsonUtil.JsonStringAObjeto(body, ArchivoActualizar.class);
 
-        
-        System.out.println("ARCHIVO ENCONTRADO "+archivo);
-        if (archivoBD.actualizarContenidoArchivo(archivo.getCodigoUsuario(), archivo.getId(), archivo.getContenido())) {
+        System.out.println("ARCHIVO ENCONTRADO " + archivo);
 
+        if (archivo.getCarpetaPadre() == null) {
+
+            if (archivoBD.actualizarContenidoArchivo(archivo.getCodigoUsuario(), archivo.getId(), archivo.getContenido())) {
+
+                jsonUtil.EnviarJson(response, archivo);
+
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+            }
+        } else {
+            if (archivoBD.actualizarArchivoSubcarpeta(archivo.getCodigoUsuario(), archivo.getCarpetaPadre(), archivo.getId(), archivo.getContenido())) {
+
+                jsonUtil.EnviarJson(response, archivo);
+
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+            }
+
+        }
+
+    }
+
+    public void getArchivho(String codigoUsuario, String codigoCarpeta, String codigoArchivo, HttpServletResponse response) throws IOException {
+
+        Archivo archivo = new Archivo();
+
+        if (codigoCarpeta.equals("raiz")) {
+
+            archivo = archivoBD.obtenerArchivoEnCarpetaRaiz(codigoUsuario, codigoArchivo);
+        } else {
+            archivo = archivoBD.obtenerArchivoSubcarpeta(codigoUsuario, codigoCarpeta, codigoArchivo);
+
+        }
+
+        System.out.println(archivo);
+        if (archivo != null) {
             jsonUtil.EnviarJson(response, archivo);
 
         } else {
@@ -63,29 +111,4 @@ public class ArchivosService {
 
     }
 
-   
-    
-    
-    
-    public void getArchivho(String codigoUsuario, String codigoCarpeta, String codigoArchivo, HttpServletResponse response) throws IOException{
-        
-       Archivo archivo =  archivoBD.obtenerArchivoEnCarpetaRaiz(codigoUsuario, codigoArchivo);
-        
-       if(archivo!=null){
-           jsonUtil.EnviarJson(response, archivo);
-           
-           
-           
-       
-       }else{
-           response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-       }
-    
-    
-    
-    }
-    
-    
-    
 }

@@ -49,6 +49,9 @@ public class ArchivosServlet extends HttpServlet {
         String codigoUsuario = request.getParameter("codigoUsuario");
         String codigoCarpeta = request.getParameter("codigoCarpeta");
         String codigoArchivo = request.getParameter("codigoArchivo");
+        System.out.println(codigoUsuario);
+        System.out.println(codigoCarpeta);
+        System.out.println(codigoArchivo);
         
         archivoService.getArchivho(codigoUsuario, codigoCarpeta, codigoArchivo, response);
         

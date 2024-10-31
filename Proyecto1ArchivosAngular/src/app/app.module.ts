@@ -19,6 +19,7 @@ import { ModuloAdminComponent } from './ModuloAdmin/modulo-admin/modulo-admin.co
 import { RegistrarUsuariosComponent } from './ModuloAdmin/registrar-usuarios/registrar-usuarios.component';
 import { CrearSubCarpetaRaizComponent } from './ModuloUsuario/crear-sub-carpeta-raiz/crear-sub-carpeta-raiz.component';
 import { CrearArchivoRaizComponent } from './ModuloUsuario/crear-archivo-raiz/crear-archivo-raiz.component';
+import { CrearArchivoSubCarpetaComponent } from './ModuloUsuario/crear-archivo-sub-carpeta/crear-archivo-sub-carpeta.component';
 
 
 
@@ -38,6 +39,7 @@ import { CrearArchivoRaizComponent } from './ModuloUsuario/crear-archivo-raiz/cr
     RegistrarUsuariosComponent,
     CrearSubCarpetaRaizComponent,
     CrearArchivoRaizComponent,
+    CrearArchivoSubCarpetaComponent,
 
     
     

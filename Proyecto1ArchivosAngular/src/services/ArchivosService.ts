@@ -33,10 +33,10 @@ export class ArchivosService {
 
 
 
-     public getArchivoRaiz(codigoUsuario: string, codigoArchivo:string): Observable<Archivo> {
+     public getArchivoRaiz(codigoUsuario: string, codigoArchivo:string, codigoCarpeta:string): Observable<Archivo> {
         
       
-        return this.httpClient.get<Archivo>(this.API_URL + "Archivo?codigoUsuario="+ codigoUsuario+"&codigoArchivo="+codigoArchivo);
+        return this.httpClient.get<Archivo>(this.API_URL + "Archivos?codigoUsuario="+ codigoUsuario+"&codigoArchivo="+codigoArchivo+"&codigoCarpeta="+codigoCarpeta);
     }
 
 
